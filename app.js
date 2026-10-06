@@ -279,7 +279,6 @@ function handleAnswer(selectedBtn, isCorrect) {
     feedbackTitle.className = "font-bold text-sm text-emerald-900";
     feedbackSubtitle.textContent =
       streak > 2 ? `Parabéns! ${streak} acertos em sequência!` : "Mandou bem!";
-
   } else {
     playSound("wrong");
     streak = 0;
