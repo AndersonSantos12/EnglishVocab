@@ -86,6 +86,22 @@ function getFilteredVocabulary() {
   return VOCABULARY.filter((item) => item.cat === currentCategory);
 }
 
+function updateCategoryCounts(categoryFilter) {
+  const categoryCounts = VOCABULARY.reduce((counts, item) => {
+    counts[item.cat] = (counts[item.cat] || 0) + 1;
+    return counts;
+  }, {});
+
+  Array.from(categoryFilter.options).forEach((option) => {
+    const label = option.dataset.label || option.textContent.trim();
+    option.dataset.label = label.replace(/ \(\d+\)$/, "");
+    const count = option.value === "all"
+      ? VOCABULARY.length
+      : categoryCounts[option.value] || 0;
+    option.textContent = `${option.dataset.label} (${count})`;
+  });
+}
+
 function resetAvailableWords() {
   const pool = getFilteredVocabulary();
   availableWordIndices = pool.map((_, index) => index);
@@ -466,6 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
   modeBtns["mixed"].addEventListener("click", () => switchMode("mixed"));
 
   const categoryFilter = document.getElementById("category-filter");
+  updateCategoryCounts(categoryFilter);
   categoryFilter.addEventListener("change", (e) => {
     currentCategory = e.target.value;
     resetAvailableWords(); // Reinicia a fila para a nova categoria
@@ -501,10 +518,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const historyModal = document.getElementById("history-modal");
   const openHistoryModal = () => {
     renderHistoryModal();
-    historyModal.classList.remove("hidden");
+    historyModal.style.display = "flex";
   };
   const closeHistoryModal = () => {
-    historyModal.classList.add("hidden");
+    historyModal.style.display = "none";
   };
   document.getElementById("btn-open-review").addEventListener("click", () => {
     renderReviewModal();
@@ -540,7 +557,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.target === historyModal) closeHistoryModal();
   });
   window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !historyModal.classList.contains("hidden")) {
+    if (event.key === "Escape" && historyModal.style.display !== "none") {
       closeHistoryModal();
     }
   });
