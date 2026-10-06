@@ -1,0 +1,202 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f0f8f7;
+  min-height: 100vh;
+  color: #1e293b;
+}
+
+.font-brand {
+  font-family: "Fredoka", cursive, sans-serif;
+}
+
+.brand-kicker {
+  color: #ffffff;
+}
+
+.brand-title {
+  color: #f7c948;
+  margin-left: 0.18em;
+}
+
+.prompt-word {
+  transition:
+    color 180ms ease,
+    text-shadow 180ms ease;
+}
+
+.prompt-word[data-category="daily"],
+.prompt-word[data-category="home"] {
+  color: #0f766e;
+  text-shadow: 0 4px 18px rgba(15, 118, 110, 0.18);
+}
+
+.prompt-word[data-category="food"] {
+  color: #d97706;
+  text-shadow: 0 4px 18px rgba(217, 119, 6, 0.18);
+}
+
+.prompt-word[data-category="travel"] {
+  color: #2563eb;
+  text-shadow: 0 4px 18px rgba(37, 99, 235, 0.18);
+}
+
+.prompt-word[data-category="tech"] {
+  color: #0891b2;
+  text-shadow: 0 4px 18px rgba(8, 145, 178, 0.18);
+}
+
+.prompt-word[data-category="verbs"],
+.prompt-word[data-category="phrasal"] {
+  color: #db2777;
+  text-shadow: 0 4px 18px rgba(219, 39, 119, 0.18);
+}
+
+.prompt-word[data-category="adjectives"] {
+  color: #7c3aed;
+  text-shadow: 0 4px 18px rgba(124, 58, 237, 0.18);
+}
+
+.prompt-word[data-category="animals"] {
+  color: #65a30d;
+  text-shadow: 0 4px 18px rgba(101, 163, 13, 0.18);
+}
+
+.prompt-word[data-category="weather"],
+.prompt-word[data-category="connectors"] {
+  color: #0284c7;
+  text-shadow: 0 4px 18px rgba(2, 132, 199, 0.18);
+}
+
+.prompt-word[data-category="health"],
+.prompt-word[data-category="falsefriends"] {
+  color: #dc2626;
+  text-shadow: 0 4px 18px rgba(220, 38, 38, 0.18);
+}
+
+.prompt-word[data-category="studies"],
+.prompt-word[data-category="idioms"] {
+  color: #9333ea;
+  text-shadow: 0 4px 18px rgba(147, 51, 234, 0.18);
+}
+
+.prompt-word[data-category="default"] {
+  color: #0b4e48;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d3b4e2;
+}
+
+.app-container {
+  background-color: #e0f7f5;
+  border-radius: 1rem;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #c7f9f5;
+}
+
+.header-bg {
+  background-color: #0b4e48;
+}
+
+.glass-panel {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(11, 78, 72, 0.05);
+}
+
+.glass-card {
+  background: #f0f8f7;
+  border: 1px solid #c7f9f5;
+}
+
+.pulse-audio {
+  animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(11, 78, 72, 0.5);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 18px rgba(11, 78, 72, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(11, 78, 72, 0);
+  }
+}
+
+.link-count-badge {
+  background: rgba(142, 68, 173, 0.08);
+  border: 1px solid rgba(142, 68, 173, 0.25);
+  color: #5a2d70;
+}
+
+/* Feedback e cards */
+@keyframes popIn {
+  0% {
+    transform: scale(0.94);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.pop-card {
+  animation: popIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.shake-animation {
+  animation: shake 0.4s ease-in-out;
+}
+
+.option-btn {
+  transition: all 0.15s ease-out;
+  touch-action: manipulation;
+}
+
+.option-btn:active {
+  transform: scale(0.98);
+}
