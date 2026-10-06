@@ -280,13 +280,6 @@ function handleAnswer(selectedBtn, isCorrect) {
     feedbackSubtitle.textContent =
       streak > 2 ? `Parabéns! ${streak} acertos em sequência!` : "Mandou bem!";
 
-    if (streak % 5 === 0 && window.confetti) {
-      confetti({
-        particleCount: 40,
-        spread: 60,
-        origin: { y: 0.7 },
-      });
-    }
   } else {
     playSound("wrong");
     streak = 0;
