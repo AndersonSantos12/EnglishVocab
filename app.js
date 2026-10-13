@@ -154,23 +154,26 @@ function renderReviewModal() {
     card.className =
       "p-3 rounded-2xl glass-card flex items-center justify-between gap-3 hover:bg-[#e0f7f5] transition";
     card.innerHTML = `
-            <div class="flex-1">
-                <div class="flex items-center gap-2">
-                    <span class="font-bold text-sm text-[#0b4e48]">${item.en}</span>
-                    <span class="text-xs text-teal-700/70 font-mono">${item.phonetic}</span>
-                </div>
-                <p class="text-xs text-teal-800 font-semibold mt-0.5">${item.pt}</p>
-                <p class="text-[11px] text-slate-500 italic mt-1">${item.exEn}</p>
-            </div>
-            <div class="flex items-center gap-1">
-                <button class="speak-review-btn w-8 h-8 rounded-full bg-teal-50 text-[#0b4e48] hover:bg-teal-100 flex items-center justify-center transition" title="Ouvir">
-                    <i class="fa-solid fa-volume-high text-xs"></i>
-                </button>
-                <button class="remove-review-btn w-8 h-8 rounded-full text-slate-400 hover:text-rose-500 flex items-center justify-center transition" title="Remover dos erros">
-                    <i class="fa-solid fa-trash-can text-xs"></i>
-                </button>
-            </div>
-        `;
+      <div class="flex-1">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-sm text-[#0b4e48]">${item.en}</span>
+          <span class="text-xs text-teal-700/70 font-mono">${item.phonetic}</span>
+        </div>
+        <p class="text-xs text-teal-800 font-semibold mt-0.5">${item.pt}</p>
+        <p class="text-[11px] text-slate-500 italic mt-1 cursor-pointer hover:text-teal-900 transition flex items-center gap-1 group" title="Clique para ouvir o exemplo">
+          <span>"${item.exEn}"</span>
+          <i class="fa-solid fa-volume-high text-[10px] text-teal-600/60 group-hover:text-teal-700"></i>
+        </p>
+      </div>
+      <div class="flex items-center gap-1">
+        <button class="speak-review-btn w-8 h-8 rounded-full bg-teal-50 text-[#0b4e48] hover:bg-teal-100 flex items-center justify-center transition" title="Ouvir palavra">
+          <i class="fa-solid fa-volume-high text-xs"></i>
+        </button>
+        <button class="remove-review-btn w-8 h-8 rounded-full text-slate-400 hover:text-rose-500 flex items-center justify-center transition" title="Remover dos erros">
+          <i class="fa-solid fa-trash-can text-xs"></i>
+        </button>
+      </div>
+    `;
 
     card
       .querySelector(".speak-review-btn")
@@ -180,6 +183,9 @@ function renderReviewModal() {
       updateReviewBadge();
       renderReviewModal();
     });
+    card
+      .querySelector(".italic")
+      .addEventListener("click", () => speakEnglish(item.exEn));
 
     listContainer.appendChild(card);
   });
@@ -402,12 +408,12 @@ function renderCard(wordObj, options, isEnToPt) {
     btn.dataset.index = index;
 
     btn.innerHTML = `
-            <div class="flex items-center gap-3">
-                <span class="w-7 h-7 rounded-xl bg-teal-50 text-[#0b4e48] font-mono font-bold text-xs flex items-center justify-center border border-teal-200">${keyLetters[index]}</span>
-                <span class="text-sm sm:text-base font-semibold text-slate-800">${opt.text}</span>
-            </div>
-            <i class="option-icon fa-regular fa-circle text-teal-300 text-sm"></i>
-        `;
+      <div class="flex items-center gap-3">
+        <span class="w-7 h-7 rounded-xl bg-teal-50 text-[#0b4e48] font-mono font-bold text-xs flex items-center justify-center border border-teal-200">${keyLetters[index]}</span>
+        <span class="text-sm sm:text-base font-semibold text-slate-800">${opt.text}</span>
+      </div>
+      <i class="option-icon fa-regular fa-circle text-teal-300 text-sm"></i>
+    `;
 
     btn.addEventListener("click", () => handleAnswer(btn, opt.correct));
     optionsContainer.appendChild(btn);
@@ -419,7 +425,6 @@ function generateQuestion() {
   const pool = getFilteredVocabulary();
   if (pool.length === 0) return;
 
-  // Se todas as palavras da categoria já foram usadas, reinicia a lista
   if (availableWordIndices.length === 0) {
     resetAvailableWords();
     showToast(
@@ -428,7 +433,6 @@ function generateQuestion() {
     );
   }
 
-  // Sorteia um índice da lista de palavras ainda não vistas e remove-o
   const randomIndexPointer = Math.floor(
     Math.random() * availableWordIndices.length,
   );
@@ -443,7 +447,6 @@ function generateQuestion() {
     activeDirection = currentMode;
   }
 
-  // Gera os 3 distratores a partir do conjunto total da categoria
   const distractors = getRandomItems(pool, 3, wordObj);
   const isEnToPt = activeDirection === "en-pt";
   const correctAnswer = isEnToPt ? wordObj.pt : wordObj.en;
@@ -489,7 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateCategoryCounts(categoryFilter);
   categoryFilter.addEventListener("change", (e) => {
     currentCategory = e.target.value;
-    resetAvailableWords(); // Reinicia a fila para a nova categoria
+    resetAvailableWords();
     generateQuestion();
   });
 
@@ -498,6 +501,16 @@ document.addEventListener("DOMContentLoaded", () => {
       speakEnglish(currentWordObj.en);
     }
   });
+
+  // Ouvir a frase de exemplo ao clicar no card de contexto
+  const contextCard = document.getElementById("context-card");
+  if (contextCard) {
+    contextCard.addEventListener("click", () => {
+      if (currentWordObj && currentWordObj.exEn) {
+        speakEnglish(currentWordObj.exEn);
+      }
+    });
+  }
 
   document.getElementById("btn-next-word").addEventListener("click", () => {
     generateQuestion();
@@ -518,27 +531,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Controle Padronizado dos Modais
   const reviewModal = document.getElementById("review-modal");
   const historyModal = document.getElementById("history-modal");
-  const openHistoryModal = () => {
-    renderHistoryModal();
-    historyModal.style.display = "flex";
-  };
-  const closeHistoryModal = () => {
-    historyModal.style.display = "none";
-  };
-  document.getElementById("btn-open-review").addEventListener("click", () => {
+
+  const openReviewModal = () => {
     renderReviewModal();
     reviewModal.classList.remove("hidden");
-  });
-  document.getElementById("btn-close-review").addEventListener("click", () => {
+    reviewModal.classList.add("flex");
+  };
+
+  const closeReviewModal = () => {
     reviewModal.classList.add("hidden");
-  });
+    reviewModal.classList.remove("flex");
+  };
+
+  const openHistoryModal = () => {
+    renderHistoryModal();
+    historyModal.classList.remove("hidden");
+    historyModal.classList.add("flex");
+  };
+
+  const closeHistoryModal = () => {
+    historyModal.classList.add("hidden");
+    historyModal.classList.remove("flex");
+  };
+
+  // Eventos do Caderno de Revisão
+  document
+    .getElementById("btn-open-review")
+    .addEventListener("click", openReviewModal);
+  document
+    .getElementById("btn-close-review")
+    .addEventListener("click", closeReviewModal);
   document
     .getElementById("btn-modal-close-footer")
-    .addEventListener("click", () => {
-      reviewModal.classList.add("hidden");
-    });
+    .addEventListener("click", closeReviewModal);
+  reviewModal.addEventListener("click", (event) => {
+    if (event.target === reviewModal) closeReviewModal();
+  });
   document.getElementById("btn-clear-review").addEventListener("click", () => {
     reviewList = [];
     updateReviewBadge();
@@ -546,29 +577,31 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast("Caderno de erros limpo!", "info");
   });
 
-  document.getElementById("btn-open-history").addEventListener("click", () => {
-    openHistoryModal();
-  });
-  document.getElementById("btn-close-history").addEventListener("click", () => {
-    closeHistoryModal();
-  });
+  // Eventos do Histórico
+  document
+    .getElementById("btn-open-history")
+    .addEventListener("click", openHistoryModal);
+  document
+    .getElementById("btn-close-history")
+    .addEventListener("click", closeHistoryModal);
   document
     .getElementById("btn-history-close-footer")
-    .addEventListener("click", () => {
-      closeHistoryModal();
-    });
+    .addEventListener("click", closeHistoryModal);
   historyModal.addEventListener("click", (event) => {
     if (event.target === historyModal) closeHistoryModal();
-  });
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && historyModal.style.display !== "none") {
-      closeHistoryModal();
-    }
   });
   document.getElementById("btn-clear-history").addEventListener("click", () => {
     answerHistory = [];
     renderHistoryModal();
     showToast("Histórico limpo!", "info");
+  });
+
+  // Fechamento Global via Tecla Esc
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeHistoryModal();
+      closeReviewModal();
+    }
   });
 
   resetAvailableWords();
