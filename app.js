@@ -139,20 +139,21 @@ function renderReviewModal() {
   const listContainer = document.getElementById("review-list-container");
   const emptyMsg = document.getElementById("review-empty-message");
 
+  // Remove apenas os itens gerados dinamicamente sem destruir o nó emptyMsg
+  const existingCards = listContainer.querySelectorAll(".review-card-item");
+  existingCards.forEach((card) => card.remove());
+
   if (reviewList.length === 0) {
-    emptyMsg.classList.remove("hidden");
-    listContainer.innerHTML = "";
-    listContainer.appendChild(emptyMsg);
+    if (emptyMsg) emptyMsg.classList.remove("hidden");
     return;
   }
 
-  emptyMsg.classList.add("hidden");
-  listContainer.innerHTML = "";
+  if (emptyMsg) emptyMsg.classList.add("hidden");
 
   reviewList.forEach((item, index) => {
     const card = document.createElement("div");
     card.className =
-      "p-3 rounded-2xl glass-card flex items-center justify-between gap-3 hover:bg-[#e0f7f5] transition";
+      "review-card-item p-3 rounded-2xl glass-card flex items-center justify-between gap-3 hover:bg-[#e0f7f5] transition";
     card.innerHTML = `
       <div class="flex-1">
         <div class="flex items-center gap-2">
@@ -200,18 +201,20 @@ function renderHistoryModal() {
     (answer) => answer.correct,
   ).length;
 
-  correctCount.textContent = correctAnswers;
-  wrongCount.textContent = answerHistory.length - correctAnswers;
+  if (correctCount) correctCount.textContent = correctAnswers;
+  if (wrongCount)
+    wrongCount.textContent = answerHistory.length - correctAnswers;
+
+  // Remove apenas os itens gerados dinamicamente sem destruir o nó emptyMsg
+  const existingCards = listContainer.querySelectorAll(".history-card-item");
+  existingCards.forEach((card) => card.remove());
 
   if (answerHistory.length === 0) {
-    emptyMsg.classList.remove("hidden");
-    listContainer.innerHTML = "";
-    listContainer.appendChild(emptyMsg);
+    if (emptyMsg) emptyMsg.classList.remove("hidden");
     return;
   }
 
-  emptyMsg.classList.add("hidden");
-  listContainer.innerHTML = "";
+  if (emptyMsg) emptyMsg.classList.add("hidden");
 
   answerHistory.forEach((answer) => {
     const card = document.createElement("div");
@@ -223,7 +226,7 @@ function renderHistoryModal() {
       : "fa-circle-xmark text-rose-500";
     const statusText = answer.correct ? "Acerto" : "Erro";
 
-    card.className = `p-3 rounded-2xl border flex items-center justify-between gap-3 ${statusClass}`;
+    card.className = `history-card-item p-3 rounded-2xl border flex items-center justify-between gap-3 ${statusClass}`;
     card.innerHTML = `
       <div class="flex items-center gap-3 min-w-0">
         <i class="fa-solid ${statusIcon} text-lg"></i>
