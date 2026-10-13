@@ -95,9 +95,10 @@ function updateCategoryCounts(categoryFilter) {
   Array.from(categoryFilter.options).forEach((option) => {
     const label = option.dataset.label || option.textContent.trim();
     option.dataset.label = label.replace(/ \(\d+\)$/, "");
-    const count = option.value === "all"
-      ? VOCABULARY.length
-      : categoryCounts[option.value] || 0;
+    const count =
+      option.value === "all"
+        ? VOCABULARY.length
+        : categoryCounts[option.value] || 0;
     option.textContent = `${option.dataset.label} (${count})`;
   });
 }
@@ -384,6 +385,9 @@ function renderCard(wordObj, options, isEnToPt) {
     modals: "Modal Verbs",
     jobs: "Profissões",
     places: "Lugares na Cidade",
+    adverbs: "Advérbios",
+    numbers: "Números",
+    colors: "Cores",
   };
   categoryBadge.textContent = categoryMap[wordObj.cat] || "Geral";
 
